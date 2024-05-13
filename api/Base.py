@@ -5,9 +5,16 @@
 @Des: 基本路由
 """
 from fastapi import APIRouter
-router = APIRouter()
 
 
-@router.get('/')
+from api.login import index,login
+
+Apirouter = APIRouter(prefix="/v1",tags=["api路由"])
+
+
+@Apirouter.get('/input')
 async def home(num: int):
-    return num
+    return {"num":num,"data":[]}
+
+Apirouter.get("/index",tags=['api路由'],summary="注册入口")(index)
+Apirouter.post("/login",tags=['api路由'],summary="登录入口")(login)

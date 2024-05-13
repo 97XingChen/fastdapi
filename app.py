@@ -11,12 +11,15 @@ from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 from config import settings
 from fastapi.staticfiles import StaticFiles
-from api.Base import router
+from api.Base import Apirouter
 from core import Exception, Events, Router, Middleware
+from core.Router import ALLRouter
 from fastapi.templating import Jinja2Templates
 from tortoise.exceptions import OperationalError, DoesNotExist, IntegrityError, ValidationError
 from fastapi.openapi.docs import (get_redoc_html, get_swagger_ui_html, get_swagger_ui_oauth2_redirect_html)
 from fastapi.openapi.utils import get_openapi
+
+
 
 application = FastAPI(
     debug=settings.APP_DEBUG,
@@ -106,11 +109,12 @@ application.add_middleware(
     max_age=settings.SESSION_MAX_AGE
 )
 
-application.include_router(router)
+application.include_router(ALLRouter)
 # 路由ude_router(Router.router)
 
 # 静态资源目录
-application.mount('/', StaticFiles(directory=settings.STATIC_DIR), name="static")
+application.mount('/static', StaticFiles(directory=settings.STATIC_DIR), name="static")
+
 application.state.views = Jinja2Templates(directory=settings.TEMPLATE_DIR)
 
 app = application
